@@ -5,6 +5,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
     volumes:
       - dbdata:/var/lib/postgresql/data
 
@@ -43,6 +45,7 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      APP_NAME: realtime
 
   storage:
     image: supabase/storage-api:v0.46.4
@@ -71,8 +74,8 @@ services:
       KONG_DATABASE: off
       KONG_DECLARATIVE_CONFIG: /kong/declarative.yml
       KONG_PROXY_LISTEN: 0.0.0.0:8000
-    # volumes:
-    #   - ./kong.yml:/kong/declarative.yml
+    volumes:
+      - ./kong.yml:/kong/declarative.yml
 
   studio:
     image: supabase/studio:latest

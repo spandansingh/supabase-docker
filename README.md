@@ -91,11 +91,16 @@ This happens if you deployed the database *before* setting the correct `POSTGRES
 1.  **Destroy the App**: Since this is a fresh setup, the easiest fix is to delete the application in Easypanel.
 2.  **Re-deploy**: Create the app again. This creates a fresh database volume that will accept your new `POSTGRES_PASSWORD`.
 
-### Error: `APP_NAME not available` (Realtime)
+### Error: Persistent `password authentication failed`
 
-This means the `APP_NAME` environment variable is missing for the Realtime service.
+If you have deleted and recreated the app and it *still* fails:
 
-**Solution:**
-- We have updated `docker-compose.yml` to include this.
-- Ensure you pull the latest changes from your git repo.
+1.  **Check Password Complexity**:
+    - Ensure your `POSTGRES_PASSWORD` in `.env` contains **only letters and numbers**.
+    - Avoid symbols like `$`, `#`, `@`, `!` as they can confuse Docker.
+    - Try a simple password like `SupabasePass123` temporarily.
+
+2.  **Verify Volume Deletion**:
+    - When you delete the app in Easypanel, ensure the **Volumes** are also deleted.
+    - If the volume persists, the old password persists.
 

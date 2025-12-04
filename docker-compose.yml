@@ -65,22 +65,22 @@ services:
       - rest
       - realtime
       - storage
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     environment:
       KONG_DATABASE: off
       KONG_DECLARATIVE_CONFIG: /kong/declarative.yml
       KONG_PROXY_LISTEN: 0.0.0.0:8000
-    volumes:
-      - ./kong.yml:/kong/declarative.yml
+    # volumes:
+    #   - ./kong.yml:/kong/declarative.yml
 
   studio:
     image: supabase/studio:latest
     restart: unless-stopped
     depends_on:
       - kong
-    ports:
-      - "3001:3000"
+    # ports:
+    #   - "3001:3000"
     environment:
       SUPABASE_URL: http://kong:8000
       SUPABASE_ANON_KEY: ${ANON_KEY}

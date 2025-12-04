@@ -42,3 +42,21 @@ Once deployed, your services will be available at:
     - Rest: `/rest`
     - Realtime: `/realtime`
     - Storage: `/storage`
+
+## Troubleshooting
+
+### Error: `mount ... not a directory` or `Are you trying to mount a directory onto a file?`
+
+This error means Docker cannot find `kong.yml` in your repository, so it created a directory instead.
+
+**Solution:**
+1.  **Check your Git Repo**: Ensure `kong.yml` is actually present in your GitHub/GitLab repository.
+2.  **Check File Location**: Ensure `kong.yml` is in the **same folder** as `docker-compose.yml`.
+3.  **Alternative Fix (Easypanel Mounts)**:
+    - If the Git file method fails, you can manually create the config in Easypanel.
+    - Go to **Mounts** in your Easypanel service.
+    - Add a **File** mount.
+    - **Mount Path**: `/kong/declarative.yml`
+    - **Content**: Copy and paste the content of `kong.yml` here.
+    - Remove the `volumes` section for `kong` in `docker-compose.yml` if you do this.
+

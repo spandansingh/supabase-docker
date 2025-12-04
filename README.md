@@ -29,18 +29,28 @@ This repository contains the configuration files to run a full Supabase stack on
     - `SERVICE_ROLE_KEY`
     - `API_EXTERNAL_URL` (Set this to `http://YOUR_VPS_IP:8000`)
 
-3.  **Add Kong Config (Crucial Step)**:
-    - Go to the **Mounts** tab in your Easypanel service.
-    - Click **Add Mount** -> **File**.
-    - **Mount Path**: `/kong/declarative.yml`
-    - **Content**: Copy the content of `kong.yml` from this repo and paste it here.
-    - *Note: We do this via Easypanel Mounts to avoid Docker "directory vs file" errors.*
+3.  **Ensure `kong.yml` is in Git**:
+    - We are mounting `kong.yml` directly from the repository.
+    - **CRITICAL**: You MUST ensure `kong.yml` is pushed to your GitHub/GitLab repo.
+    - If this file is missing from the repo, the deployment will fail with a "not a directory" error.
 
-4.  **Configure Domains / Ports**:
-    - Since we removed the hardcoded ports to avoid conflicts:
-    - Go to **Domains** in Easypanel.
-    - Add a domain for the API (e.g., `api.yourdomain.com`) -> Point to port `8000`.
-    - Add a domain for Studio (e.g., `studio.yourdomain.com`) -> Point to port `3000`.
+4.  **Configure Domains in Easypanel**:
+    - **Do not use port :3000 in your browser.** We removed the open ports for security.
+    - Instead, use Easypanel's **Domains** tab to map URLs to internal ports:
+
+    | Service | Domain Example | Port to Map |
+    | :--- | :--- | :--- |
+    | **Studio** | `multiple-project-supabase.4m8bfa.easypanel.host` | **3000** |
+    | **API** | `api-multiple-project-supabase.4m8bfa.easypanel.host` | **8000** |
+
+    - *Note: You can create the "api-" subdomain by just typing it in the Domains tab in Easypanel.*
+
+5.  **Update Environment Variables**:
+    - Update `API_EXTERNAL_URL` in your Easypanel Environment Variables to match your API domain.
+    - **IMPORTANT**: Do NOT include `:8000` if you are using a subdomain like `api-...`. The subdomain handles the port for you.
+    - Correct: `API_EXTERNAL_URL=https://api-multiple-project-supabase.4m8bfa.easypanel.host`
+    - Incorrect: `API_EXTERNAL_URL=https://api-multiple-project-supabase.4m8bfa.easypanel.host:8000`
+
 
 5.  **Deploy**:
     - Click **Create** or **Deploy**.
@@ -72,4 +82,20 @@ This error means Docker cannot find `kong.yml` in your repository, so it created
     - **Mount Path**: `/kong/declarative.yml`
     - **Content**: Copy and paste the content of `kong.yml` here.
     - Remove the `volumes` section for `kong` in `docker-compose.yml` if you do this.
+
+### Error: `password authentication failed for user "postgres"`
+
+This happens if you deployed the database *before* setting the correct `POSTGRES_PASSWORD`, or if you changed the password after the database was created. The database saves the *first* password it sees and ignores future changes.
+
+**Solution:**
+1.  **Destroy the App**: Since this is a fresh setup, the easiest fix is to delete the application in Easypanel.
+2.  **Re-deploy**: Create the app again. This creates a fresh database volume that will accept your new `POSTGRES_PASSWORD`.
+
+### Error: `APP_NAME not available` (Realtime)
+
+This means the `APP_NAME` environment variable is missing for the Realtime service.
+
+**Solution:**
+- We have updated `docker-compose.yml` to include this.
+- Ensure you pull the latest changes from your git repo.
 

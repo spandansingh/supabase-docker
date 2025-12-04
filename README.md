@@ -29,7 +29,20 @@ This repository contains the configuration files to run a full Supabase stack on
     - `SERVICE_ROLE_KEY`
     - `API_EXTERNAL_URL` (Set this to `http://YOUR_VPS_IP:8000`)
 
-3.  **Deploy**:
+3.  **Add Kong Config (Crucial Step)**:
+    - Go to the **Mounts** tab in your Easypanel service.
+    - Click **Add Mount** -> **File**.
+    - **Mount Path**: `/kong/declarative.yml`
+    - **Content**: Copy the content of `kong.yml` from this repo and paste it here.
+    - *Note: We do this via Easypanel Mounts to avoid Docker "directory vs file" errors.*
+
+4.  **Configure Domains / Ports**:
+    - Since we removed the hardcoded ports to avoid conflicts:
+    - Go to **Domains** in Easypanel.
+    - Add a domain for the API (e.g., `api.yourdomain.com`) -> Point to port `8000`.
+    - Add a domain for Studio (e.g., `studio.yourdomain.com`) -> Point to port `3000`.
+
+5.  **Deploy**:
     - Click **Create** or **Deploy**.
 
 ## Accessing Services

@@ -59,6 +59,12 @@ services:
       PGRST_JWT_SECRET: ${JWT_SECRET}
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      TENANT_ID: stub
+      REGION: stub
+      GLOBAL_S3_BUCKET: stub
+    volumes:
+      - storage-data:/var/lib/storage
 
   kong:
     image: kong:2.8
@@ -90,3 +96,4 @@ services:
 
 volumes:
   dbdata_fresh:
+  storage-data:

@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
     volumes:
-      - supabase_db_main:/var/lib/postgresql/data
+      - supabase_db_v3:/var/lib/postgresql/data
 
   auth:
     image: supabase/gotrue:v2.151.0
@@ -95,5 +95,5 @@ services:
       SUPABASE_ANON_KEY: ${ANON_KEY}
 
 volumes:
-  supabase_db_main:
+  supabase_db_v3:
   storage-data:
